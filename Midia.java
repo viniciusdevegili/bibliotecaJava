@@ -1,6 +1,10 @@
+import java.util.ArrayList;
+
 public class Midia {
-    private String titulo;
+    public String titulo;
     private boolean disponivel;
+
+    public static ArrayList<Midia> midias = new ArrayList<>();
 
     public Midia(String titulo, boolean disponivel) {
         this.titulo = titulo;
@@ -8,20 +12,25 @@ public class Midia {
     }
 
     public static void main(String[] args) {
-        Midia midia1 = new Midia("Filme 1", true);
-        Midia midia2 = new Midia("Livro 1", false);
-
+        // Criação de uma lista de mídias
+        Midia midia = new Midia("Filme 1", true);
+        
+        // Adicione as mídias à lista
+        midias.add(midia);
+    
         try {
-            midia1.emprestar(); // Isso deve gerar uma exceção
+            midia.emprestar();
         } catch (EmprestimoException e) {
             System.out.println("Erro ao emprestar a mídia: " + e.getMessage());
         }
 
         try {
-            midia2.devolver(); // Isso deve gerar uma exceção
+            midia.devolver();
         } catch (DevolucaoException e) {
             System.out.println("Erro ao devolver a mídia: " + e.getMessage());
         }
+
+        listarMidias();
     }
 
     public class EmprestimoException extends Exception {
@@ -48,34 +57,31 @@ public class Midia {
         return this.disponivel;
     }
 
+    public static void listarMidias() {
+        for (int i = 0; i < midias.size(); i++) {
+            System.out.println(i + " - " + midias.get(i).toString());
+        }
+    }
+
+    public static ArrayList<Midia> getMidias() {
+        return midias;
+    }
+
     public void emprestar() throws EmprestimoException {
         if (!this.disponivel) {
-            try {
-                // Código que pode lançar uma exceção
-                throw new EmprestimoException("A mídia já está emprestada.");
-            } catch (EmprestimoException e) {
-                // Trate a exceção ou re-lance-a se necessário
-                System.out.println("Erro ao emprestar a mídia: " + e.getMessage());
-                // Outras ações de tratamento
-            }
+            throw new EmprestimoException("A mídia já está emprestada.");
         }
+        this.disponivel = false;
     }
 
     public void devolver() throws DevolucaoException {
         if (this.disponivel) {
-            try {
-                // Código que pode lançar uma exceção
-                throw new DevolucaoException("A mídia já está disponível.");
-            } catch (DevolucaoException e) {
-                // Trate a exceção ou re-lance-a se necessário
-                System.out.println("Erro ao devolver a mídia: " + e.getMessage());
-                // Outras ações de tratamento
-            }
+            throw new DevolucaoException("A mídia já está disponível.");
         }
+        this.disponivel = true;
     }
 
     public String toString() {
         return "Título: " + this.titulo + ". Disponível: " + (this.disponivel ? "Sim" : "Não");
     }
-
 }

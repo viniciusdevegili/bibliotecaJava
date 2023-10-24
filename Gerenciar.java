@@ -16,8 +16,10 @@ public class Gerenciar {
             System.out.println("5 - Emprestar livro");
             System.out.println("6 - Devolver livro");
             System.out.println("7 - Listar livros");
-            System.out.println("8 - Emprestar midia");
-            System.out.println("9 - Devolver midia");
+            System.out.println("8 - Criar midia");
+            System.out.println("9 - Emprestar midia");
+            System.out.println("10 - Devolver midia");
+            System.out.println("11 - Listar midias");
             try {
                 op = sc.nextInt();
             } catch (Exception e) {
@@ -187,12 +189,62 @@ public class Gerenciar {
                     break;
                 }
                 case 8: {
+                    System.out.println("Digite o nome do título: ");
+                    String novoTitulo = sc.next();
+
+                    Midia novaMidia = new Midia(novoTitulo, true);
+
+                    Midia.midias.add(novaMidia);
+                    System.out.println("Mídia criada com sucesso: " + novaMidia.toString());
+                    break;
+                }
+                    case 9: {
+                        int posicaoMidia = -1;
+                        do {
+                            Midia.listarMidias();
+                            try {
+                                posicaoMidia = sc.nextInt();
+                                if (posicaoMidia < 0 || posicaoMidia >= Midia.getMidias().size()) {
+                                    throw new Exception("Mídia inválida");
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Mídia inválida");
+                                sc.nextLine(); // Limpa o buffer de entrada
+                                posicaoMidia = -1;
+                            }
+                        } while (posicaoMidia < 0);
+                    
+                        Midia midia = Midia.getMidias().get(posicaoMidia);
+                    
+                        System.out.println("1 - Emprestar a mídia");
+                        System.out.println("2 - Devolver a mídia");
+                        int opcao = sc.nextInt();
+                    
+                        if (opcao == 1) {
+                            try {
+                                midia.emprestar();
+                                System.out.println("Mídia emprestada com sucesso.");
+                            } catch (EmprestimoException e) {
+                                System.out.println("Erro ao emprestar a mídia: " + e.getMessage());
+                            }
+                        } else if (opcao == 2) {
+                            try {
+                                midia.devolver();
+                                System.out.println("Mídia devolvida com sucesso.");
+                            } catch (DevolucaoException e) {
+                                System.out.println("Erro ao devolver a mídia: " + e.getMessage());
+                            }
+                    
+                        break;
+                    }
+                }
+                case 10: {
                     int posicaoMidia = -1;
                     do {
-                        bibliotecas.listarMidias();
+                        Midia.listarMidias();
                         try {
                             posicaoMidia = sc.nextInt();
-                            if (posicaoMidia >= bibliotecas.getMidias().size()) {
+                            if (posicaoMidia >= Midia.getMidias().size()) {
                                 throw new Exception("Mídia inválida");
                             }
                         } catch (Exception e) {
@@ -201,42 +253,17 @@ public class Gerenciar {
                         }
                     } while (posicaoMidia < 0);
 
-                    Midia midia = bibliotecas.getMidias().get(posicaoMidia)
+                    Midia midia = Midia.getMidias().get(posicaoMidia);
 
-                    try {
-                        midia.emprestar();
-                        System.out.println("Mídia emprestada com sucesso.");
-                    } catch (EmprestimoException e) {
-                        System.out.println(e.getMessage());
+                    break;
+                }
+                case 11: {
+                    System.out.println("Lista de Midias Disponíveis:");
+                    for (Midia midias : Midia.midias) {
+                        midias.listarMidias();
                     }
                     break;
                 }
-                case 9: {
-                    int posicaoMidia = -1;
-                    do {
-                        biblioteca.listarMidias();
-                        try {
-                            posicaoMidia = sc.nextInt();
-                            if (posicaoMidia >= biblioteca.getMidias().size()) {
-                                throw new Exception("Mídia inválida");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Mídia inválida");
-                            posicaoMidia = -1;
-                        }
-                    } while (posicaoMidia < 0);
-
-                    Midia midia = biblioteca.getMidias().get(posicaoMidia);
-
-                    try {
-                        midia.devolver();
-                        System.out.println("Mídia devolvida com sucesso.");
-                    } catch (DevolucaoException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                }
-
                 default: {
                     System.out.println("Opção inválida");
                     break;
