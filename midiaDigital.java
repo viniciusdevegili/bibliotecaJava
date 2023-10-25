@@ -3,49 +3,40 @@ public class midiaDigital {
     private String album;
     private boolean disponivel;
 
-    public midiaDigital(String titulo, String album, boolean disponivel) {
+    public midiaDigital(String titulo, String album) {
         this.titulo = titulo;
         this.album = album;
-        this.disponivel = disponivel;
+        this.disponivel = true;
     }
 
     public String getTitulo() {
-        return this.titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+        return titulo;
     }
 
     public String getAlbum() {
-        return this.album;
+        return album;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
+    public boolean isDisponivel() {
+        return disponivel;
     }
 
-    public boolean getDisponivel() {
-        return this.disponivel;
-    }
-
-    public boolean emprestar() {
-        if (this.disponivel) {
-            this.disponivel = false;
-            return true; // Mídia emprestada com sucesso.
+    public void emprestar() throws EmprestimoException {
+        if (!disponivel) {
+            throw new EmprestimoException("A mídia digital não está disponível para empréstimo.");
         }
-        return false; // Mídia não disponível para empréstimo.
+        disponivel = false;
     }
 
-    public boolean devolver() {
-        if (!this.disponivel) {
-            this.disponivel = true;
-            return true; // Mídia devolvida com sucesso.
+    public void devolver() throws DevolucaoException {
+        if (disponivel) {
+            throw new DevolucaoException("A mídia digital já está disponível na biblioteca.");
         }
-        return false; // Mídia já estava disponível.
+        disponivel = true;
     }
 
+    @Override
     public String toString() {
-        return "Título: " + this.titulo + ", Album: " + this.album + ". Disponível: " + (this.disponivel ? "Sim" : "Não");
+        return "Mídia Digital: " + titulo + " - Album: " + album + " - Disponível: " + (disponivel ? "Sim" : "Não");
     }
 }

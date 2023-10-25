@@ -4,272 +4,136 @@ public class Gerenciar {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int op = 0;
+        Biblioteca biblioteca = new Biblioteca("Minha Biblioteca");
+
+        int op;
 
         do {
-            System.out.println("Minha Biblioteca");
+            System.out.println("Biblioteca: " + biblioteca.getNome());
             System.out.println("0 - Sair");
-            System.out.println("1 - Criar autor");
-            System.out.println("2 - Criar livro");
-            System.out.println("3 - Criar biblioteca");
-            System.out.println("4 - Adicionar livro");
-            System.out.println("5 - Emprestar livro");
-            System.out.println("6 - Devolver livro");
-            System.out.println("7 - Listar livros");
-            System.out.println("8 - Criar midia");
-            System.out.println("9 - Emprestar midia");
-            System.out.println("10 - Devolver midia");
-            System.out.println("11 - Listar midias");
+            System.out.println("1 - Adicionar Livro");
+            System.out.println("2 - Adicionar Mídia Digital");
+            System.out.println("3 - Listar Livros Disponíveis");
+            System.out.println("4 - Listar Mídias Digitais Disponíveis");
+            System.out.println("5 - Adicionar Autor");
+            System.out.println("6 - Listar Autores");
+            System.out.println("7 - Emprestar Livro");
+            System.out.println("8 - Devolver Livro");
+            System.out.println("9 - Emprestar Mídia Digital");
+            System.out.println("10 - Devolver Mídia Digital");
             try {
                 op = sc.nextInt();
             } catch (Exception e) {
-                op = 99;
+                op = -1;
             }
 
             switch (op) {
-                case 0: {
-                    System.out.println("Sair....");
+                case 0:
+                    System.out.println("Saindo...");
                     break;
-                }
-                case 1: {
-                    System.out.println("Digite o nome do autor");
-                    String nome = sc.next();
-                    System.out.println("Digite o nacionalidade do autor");
-                    String nacionalidade = sc.next();
-                    new Autor(nome, nacionalidade);
-                    break;
-                }
-                case 2: {
-                    System.out.println("Digite o titulo");
-                    String titulo = sc.next();
-                    int posicaoAutor = -1;
-                    do {
-                        Autor.listarAutores();
-                        try {
-                            posicaoAutor = sc.nextInt();
-                            if (posicaoAutor >= Autor.getAutores().size()) {
-                                throw new Exception("Autor inválido");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Autor inválido");
-                            posicaoAutor = -1;
-                        }
-                    } while (posicaoAutor < 0);
 
-                    Autor autor = Autor.getAutores().get(posicaoAutor);
-                    new Livro(titulo, autor, true);
-                    break;
-                }
-                case 3: {
-                    System.out.println("Digite o nome da biblioteca");
-                    String nomeBiblioteca = sc.next();
-                    new Biblioteca(nomeBiblioteca, null);
-                    break;
-                }
-                case 4: {
-                    int posicaoBiblioteca = -1;
-                    do {
-                        Biblioteca.listarBibliotecas();
-                        try {
-                            posicaoBiblioteca = sc.nextInt();
-                            if (posicaoBiblioteca >= Biblioteca.bibliotecas.size()) {
-                                throw new Exception("Biblioteca inválida");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Biblioteca inválida");
-                            posicaoBiblioteca = -1;
-                        }
-                    } while (posicaoBiblioteca < 0);
+                case 1:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o título do livro:");
+                    String tituloLivro = sc.nextLine();
+                    System.out.println("Digite o nome do autor:");
+                    String nomeAutor = sc.nextLine();
 
-                    Biblioteca biblioteca = Biblioteca.bibliotecas.get(posicaoBiblioteca);
-
-                    int posicaoLivro = -1;
-                    do {
-                        Livro.listarLivros();
-                        try {
-                            posicaoLivro = sc.nextInt();
-                            if (posicaoLivro >= Livro.livros.size()) {
-                                throw new Exception("Livro inválido");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Livro inválido");
-                            posicaoLivro = -1;
-                        }
-                    } while (posicaoLivro < 0);
-
-                    Livro livro = Livro.livros.get(posicaoLivro);
+                    Autor autor = new Autor(nomeAutor);
+                    Livro livro = new Livro(tituloLivro, autor);
 
                     biblioteca.adicionarLivro(livro);
                     break;
-                }
-                case 5: {
-                    int posicaoBiblioteca = -1;
-                    do {
-                        Biblioteca.listarBibliotecas();
-                        try {
-                            posicaoBiblioteca = sc.nextInt();
-                            if (posicaoBiblioteca >= Biblioteca.bibliotecas.size()) {
-                                throw new Exception("Biblioteca inválida");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Biblioteca inválida");
-                            posicaoBiblioteca = -1;
-                        }
-                    } while (posicaoBiblioteca < 0);
 
-                    Biblioteca biblioteca = Biblioteca.bibliotecas.get(posicaoBiblioteca);
+                case 2:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o título da mídia digital:");
+                    String tituloMidia = sc.nextLine();
+                    System.out.println("Digite o nome do álbum:");
+                    String albumMidia = sc.nextLine();
 
-                    int posicaoLivro = -1;
-                    do {
-                        biblioteca.listarLivros();
-                        try {
-                            posicaoLivro = sc.nextInt();
-                            if (posicaoLivro >= Livro.livros.size()) {
-                                throw new Exception("Livro inválido");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Livro inválido");
-                            posicaoLivro = -1;
-                        }
-                    } while (posicaoLivro < 0);
+                    midiaDigital midiaDigital = new midiaDigital(tituloMidia, albumMidia);
 
-                    Livro livro = biblioteca.livros.get(posicaoLivro);
+                    biblioteca.adicionarMidiaDigital(midiaDigital);
+                    break;
+
+                case 3:
+                    biblioteca.listarLivros();
+                    break;
+
+                case 4:
+                    biblioteca.listarMidiasDigitais();
+                    break;
+
+                case 5:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o nome do autor:");
+                    String nomeNovoAutor = sc.nextLine();
+
+                    Autor novoAutor = new Autor(nomeNovoAutor);
+                    break;
+
+                case 6:
+                    Autor.listarAutores();
+                    break;
+
+                case 7:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o título do livro para emprestar:");
+                    String tituloLivroEmprestar = sc.nextLine();
+
                     try {
-                        livro.emprestar();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        biblioteca.emprestarLivro(tituloLivroEmprestar);
+                        System.out.println("Livro emprestado com sucesso.");
+                    } catch (EmprestimoException e) {
+                        System.out.println("Erro ao emprestar o livro: " + e.getMessage());
                     }
-
                     break;
-                }
-                case 6: {
-                    int posicaoBiblioteca = -1;
-                    do {
-                        Biblioteca.listarBibliotecas();
-                        try {
-                            posicaoBiblioteca = sc.nextInt();
-                            if (posicaoBiblioteca >= Biblioteca.bibliotecas.size()) {
-                                throw new Exception("Biblioteca inválida");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Biblioteca inválida");
-                            posicaoBiblioteca = -1;
-                        }
-                    } while (posicaoBiblioteca < 0);
 
-                    Biblioteca biblioteca = Biblioteca.bibliotecas.get(posicaoBiblioteca);
+                case 8:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o título do livro para devolver:");
+                    String tituloLivroDevolver = sc.nextLine();
 
-                    int posicaoLivro = -1;
-                    do {
-                        biblioteca.listarLivros();
-                        try {
-                            posicaoLivro = sc.nextInt();
-                            if (posicaoLivro >= Livro.livros.size()) {
-                                throw new Exception("Livro inválido");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Livro inválido");
-                            posicaoLivro = -1;
-                        }
-                    } while (posicaoLivro < 0);
-
-                    Livro livro = biblioteca.livros.get(posicaoLivro);
                     try {
-                        livro.devolver();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        biblioteca.devolverLivro(tituloLivroDevolver);
+                        System.out.println("Livro devolvido com sucesso.");
+                    } catch (DevolucaoException e) {
+                        System.out.println("Erro ao devolver o livro: " + e.getMessage());
                     }
                     break;
-                }
-                case 7: {
-                    System.out.println("Lista de Livros Disponíveis:");
-                    for (Biblioteca biblioteca : Biblioteca.bibliotecas) {
-                        biblioteca.listarLivros();
+
+                case 9:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o título da mídia digital para emprestar:");
+                    String tituloMidiaEmprestar = sc.nextLine();
+
+                    try {
+                        biblioteca.emprestarMidiaDigital(tituloMidiaEmprestar);
+                        System.out.println("Mídia digital emprestada com sucesso.");
+                    } catch (EmprestimoException e) {
+                        System.out.println("Erro ao emprestar a mídia digital: " + e.getMessage());
                     }
                     break;
-                }
-                case 8: {
-                    System.out.println("Digite o nome do título: ");
-                    String novoTitulo = sc.next();
 
-                    Midia novaMidia = new Midia(novoTitulo, true);
+                case 10:
+                    sc.nextLine(); // Limpar o buffer
+                    System.out.println("Digite o título da mídia digital para devolver:");
+                    String tituloMidiaDevolver = sc.nextLine();
 
-                    Midia.midias.add(novaMidia);
-                    System.out.println("Mídia criada com sucesso: " + novaMidia.toString());
-                    break;
-                }
-                    case 9: {
-                        int posicaoMidia = -1;
-                        do {
-                            Midia.listarMidias();
-                            try {
-                                posicaoMidia = sc.nextInt();
-                                if (posicaoMidia < 0 || posicaoMidia >= Midia.getMidias().size()) {
-                                    throw new Exception("Mídia inválida");
-                                }
-                            } catch (Exception e) {
-                                System.out.println("Mídia inválida");
-                                sc.nextLine(); // Limpa o buffer de entrada
-                                posicaoMidia = -1;
-                            }
-                        } while (posicaoMidia < 0);
-                    
-                        Midia midia = Midia.getMidias().get(posicaoMidia);
-                    
-                        System.out.println("1 - Emprestar a mídia");
-                        System.out.println("2 - Devolver a mídia");
-                        int opcao = sc.nextInt();
-                    
-                        if (opcao == 1) {
-                            try {
-                                midia.emprestar();
-                                System.out.println("Mídia emprestada com sucesso.");
-                            } catch (EmprestimoException e) {
-                                System.out.println("Erro ao emprestar a mídia: " + e.getMessage());
-                            }
-                        } else if (opcao == 2) {
-                            try {
-                                midia.devolver();
-                                System.out.println("Mídia devolvida com sucesso.");
-                            } catch (DevolucaoException e) {
-                                System.out.println("Erro ao devolver a mídia: " + e.getMessage());
-                            }
-                    
-                        break;
-                    }
-                }
-                case 10: {
-                    int posicaoMidia = -1;
-                    do {
-                        Midia.listarMidias();
-                        try {
-                            posicaoMidia = sc.nextInt();
-                            if (posicaoMidia >= Midia.getMidias().size()) {
-                                throw new Exception("Mídia inválida");
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Mídia inválida");
-                            posicaoMidia = -1;
-                        }
-                    } while (posicaoMidia < 0);
-
-                    Midia midia = Midia.getMidias().get(posicaoMidia);
-
-                    break;
-                }
-                case 11: {
-                    System.out.println("Lista de Midias Disponíveis:");
-                    for (Midia midias : Midia.midias) {
-                        midias.listarMidias();
+                    try {
+                        biblioteca.devolverMidiaDigital(tituloMidiaDevolver);
+                        System.out.println("Mídia digital devolvida com sucesso.");
+                    } catch (DevolucaoException e) {
+                        System.out.println("Erro ao devolver a mídia digital: " + e.getMessage());
                     }
                     break;
-                }
-                default: {
-                    System.out.println("Opção inválida");
-                    break;
-                }
+
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
             }
         } while (op != 0);
+
         sc.close();
     }
 }
