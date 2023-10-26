@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Gerenciar {
+public class Gerenciar { // aqui foi criado a classe gerenciar
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -8,7 +8,7 @@ public class Gerenciar {
 
         int op;
 
-        do {
+        do { // aqui foi criado o método do
             System.out.println("Biblioteca: " + biblioteca.getNome());
             System.out.println("0 - Sair");
             System.out.println("1 - Adicionar Livro");
@@ -32,7 +32,7 @@ public class Gerenciar {
                     System.out.println("Saindo...");
                     break;
 
-                case 1:
+                case 1: // aqui foi criado Adicionar Livro
                     sc.nextLine(); // Limpar o buffer
                     System.out.println("Digite o título do livro:");
                     String tituloLivro = sc.nextLine();
