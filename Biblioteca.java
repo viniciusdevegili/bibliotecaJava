@@ -1,97 +1,79 @@
+import java.lang.reflect.Array;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Biblioteca { // aqui foi criado a classe biblioteca
+import com.mysql.cj.protocol.Resultset;
+
+public class Biblioteca {
     private String nome;
-    private ArrayList<Livro> livros;
-    private ArrayList<midiaDigital> midiasDigitais;
+    private int id;
 
-    public Biblioteca(String nome) { // aqui foi criado o construtor da classe biblioteca
+    public Biblioteca(String nome) {
         this.nome = nome;
-        this.livros = new ArrayList<>();
-        this.midiasDigitais = new ArrayList<>();
+
     }
 
-    public void adicionarLivro(Livro livro) { // aqui foi criado o método adicionarLivro
-
-        this.livros.add(livro); // aqui foi criado o método adicionarLivro
+    public Biblioteca(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
     }
 
-    public void adicionarMidiaDigital(midiaDigital midiaDigital) { // aqui foi criado o método adicionarMidiaDigital
-        this.midiasDigitais.add(midiaDigital); // aqui foi criado o método adicionarMidiaDigital
+    public int getId() {
+        return this.id;
     }
 
-    public void listarLivros() { // aqui foi criado o método listarLivros
-        System.out.println("Livros disponíveis na biblioteca " + nome + ":"); // aqui foi criado o método listarLivros
-        for (Livro livro : livros) { // irá imprimir os livros
-            System.out.println(livro.toString());
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String toString() {
+        return "Nome: " + this.nome;
+    }
+
+    // criado o metodo adicionarBiblioteca que recebe um objeto Biblioteca e uma
+    // conexao com o banco de dados
+
+    public void adicionarBiblioteca(Biblioteca biblioteca, Connection conn) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO biblioteca (nome) VALUES (?)");
+        ps.setString(1, biblioteca.getNome());
+        ps.executeUpdate();
+    }
+
+    // criado o metodo encontrarBiblioteca que recebe uma conexao com o banco de
+    // dados e um id
+
+    public static Biblioteca encontrarBiblioteca(Connection conn, int id) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM biblioteca WHERE id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Biblioteca biblioteca = new Biblioteca(rs.getInt("id"), rs.getString("nome"));
+            return biblioteca;
+        } else {
+            return null;
         }
+
     }
 
-    public void listarMidiasDigitais() { // aqui foi criado o método listarMidiasDigitais
-        System.out.println("Mídias digitais disponíveis na biblioteca " + nome + ":"); // aqui foi criado o método
-                                                                                       // listarMidiasDigitais
-        for (midiaDigital midiaDigital : midiasDigitais) { // irá imprimir as midias digitais
-            System.out.println(midiaDigital.toString());
+    // criado o metodo listarBibliotecas que recebe uma conexao com o banco de dados
+
+    public static void listarBibliotecas(Connection conn) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM biblioteca");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            System.out.println(rs.getInt("id") + " - " + rs.getString("nome"));
         }
-    }
 
-    public String getNome() { // aqui foi criado o método getNome
-        return nome;
-    }
-
-    public void emprestarLivro(String tituloLivro) throws EmprestimoException { // aqui foi criado o método
-                                                                                // emprestarLivro
-        for (Livro livro : livros) {
-            if (livro.getTitulo().equals(tituloLivro) && livro.isDisponivel()) { // se o livro estiver disponível, ele
-                                                                                 // irá emprestar
-                livro.emprestar();
-                return;
-            }
-        }
-        throw new EmprestimoException("Livro não encontrado ou não disponível para empréstimo."); // se o livro não
-                                                                                                  // estiver
-                                                                                                  // disponível, irá
-                                                                                                  // aparecer a
-                                                                                                  // mensagem de
-                                                                                                  // erro
-    }
-
-    public void devolverLivro(String tituloLivro) throws DevolucaoException { // aqui foi criado o método devolverLivro
-        for (Livro livro : livros) {
-            if (livro.getTitulo().equals(tituloLivro) && !livro.isDisponivel()) { // se o livro não estiver
-                                                                                  // disponível, ele irá devolver
-                livro.devolver();
-                return;
-            }
-        }
-        throw new DevolucaoException("Livro não encontrado ou já disponível na biblioteca.");
-    }
-
-    public void emprestarMidiaDigital(String tituloMidia) throws EmprestimoException { // aqui foi criado o método
-                                                                                       // emprestarMidiaDigital
-        for (midiaDigital midiaDigital : midiasDigitais) {
-            if (midiaDigital.getTitulo().equals(tituloMidia) && midiaDigital.isDisponivel()) { // se a midia digital
-                                                                                               // estiver
-                                                                                               // disponível, ele irá
-                                                                                               // emprestar
-                midiaDigital.emprestar();
-                return;
-            }
-        }
-        throw new EmprestimoException("Mídia digital não encontrada ou não disponível para empréstimo.");
-    }
-
-    public void devolverMidiaDigital(String tituloMidia) throws DevolucaoException { // aqui foi criado o método
-                                                                                     // devolverMidiaDigital
-        for (midiaDigital midiaDigital : midiasDigitais) {
-            if (midiaDigital.getTitulo().equals(tituloMidia) && !midiaDigital.isDisponivel()) { // se a midia digital
-                                                                                                // não estiver
-                                                                                                // disponível, ele irá
-                                                                                                // devolver
-                midiaDigital.devolver();
-                return;
-            }
-        }
-        throw new DevolucaoException("Mídia digital não encontrada ou já disponível na biblioteca.");
     }
 }

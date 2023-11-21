@@ -1,41 +1,81 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Autor extends Pessoa { // aqui foi criado a classe autor, com uma extensão para a classe pessoa
+public class Autor extends Pessoa {
+    private int id;
     private String nacionalidade;
-    private static ArrayList<Autor> autores = new ArrayList<Autor>();
 
-    public Autor(String nome) { // aqui foi criado o construtor da classe autor
+    public Autor(String nome, String nacionalidade) {
         super(nome);
         this.nacionalidade = nacionalidade;
-        autores.add(this);
     }
 
-    public Autor(String nome, String nacionalidade) { // aqui foi criado o construtor da classe autor
+    public Autor(int id, String nome, String nacionalidade) {
         super(nome);
-        this.nacionalidade = "Brasil";
-        autores.add(this);
-    }
-
-    public void setNacionalidade(String nacionalidade) { // aqui foi criado o método setNacionalidade
+        this.id = id;
         this.nacionalidade = nacionalidade;
     }
 
-    public String getNacionalidade() { // aqui foi criado o método getNacionalidade
+    public void setNacionalidade(String nacionalidade) {
+        this.nacionalidade = nacionalidade;
+    }
+
+    public String getNacionalidade() {
         return this.nacionalidade;
     }
 
-    public static ArrayList<Autor> getAutores() { // aqui foi criado o método getAutores
-        return autores;
+    public int getId() {
+        return this.id;
     }
 
-    public static void listarAutores() { // aqui foi criado o método listarAutores
-        for (int i = 0; i < autores.size(); i++) { // aqui foi criado o for para listar os autores
-            System.out.println(i + " - " + autores.get(i).toString());
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    // criado o metodo adicionarAutor que recebe um objeto Autor e uma conexao com o
+    // banco de dados
+
+    public static void adicionarAutor(Autor autor, Connection conn) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO autor (nome, nacionalidade) VALUES (?, ?)");
+        ps.setString(1, autor.getNome());
+        ps.setString(2, autor.getNacionalidade());
+        ps.executeUpdate();
+
+    }
+
+    // criado o metodo listarAutores que recebe uma conexao com o banco de dados
+
+    public static void listarAutores(Connection conn) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM autor");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            System.out.println(rs.getInt("id") + " - " + rs.getString("nome") + " - " + rs.getString("nacionalidade"));
         }
+
     }
 
-    public String toString() { // aqui foi criado o método toString
-        return "Nome: " + this.getNome() + ". Nacionalidade: " + this.nacionalidade;
+    // criado o metodo encontrarAutor que recebe uma conexao com o banco de dados e
+    // um id
+
+    public static Autor encontrarAutor(Connection conn, int id) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM autor WHERE id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Autor autor = new Autor(rs.getInt("id"), rs.getString("nome"), rs.getString("nacionalidade"));
+            return autor;
+        } else {
+            return null;
+        }
+
     }
+
+    public String toString() {
+        return "Nome do Autor: " + super.getNome() +
+                " Nacionalidade do Autor: " + this.nacionalidade;
+    }
+
 }
